@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Kinopoisk Metadata Provider</title>
+</head>
+<body>
+    <div data-role="page" class="page type-interior pluginConfigurationPage">
+        <div data-role="content">
+            <div class="content-primary">
+                <div class="readOnlyContent">
+                    <p>Configure the Kinopoisk metadata provider plugin settings.</p>
+                    <p>Get your API key from <a href="https://api.kinopoisk.dev/" target="_blank">Kinopoisk API</a></p>
+                </div>
+                <form class="kinopoiskConfigForm">
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="ApiKey">API Key:</label>
+                        <input id="ApiKey" type="password" is="emby-input" placeholder="XN7WBQA-MF24EYN-Q4SWZHF-7AR2715" />
+                        <div class="fieldDescription">
+                            Your Kinopoisk API key (default provided)
+                        </div>
+                    </div>
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="ApiUrl">API URL:</label>
+                        <input id="ApiUrl" type="text" is="emby-input" placeholder="https://api.kinopoisk.dev/v1.4" />
+                        <div class="fieldDescription">
+                            Base URL for the Kinopoisk API
+                        </div>
+                    </div>
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="RequestTimeoutSeconds">Request Timeout (seconds):</label>
+                        <input id="RequestTimeoutSeconds" type="number" is="emby-input" min="5" max="300" />
+                        <div class="fieldDescription">
+                            Timeout for API requests in seconds
+                        </div>
+                    </div>
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="MaxSearchResults">Max Search Results:</label>
+                        <input id="MaxSearchResults" type="number" is="emby-input" min="1" max="50" />
+                        <div class="fieldDescription">
+                            Maximum number of search results to return
+                        </div>
+                    </div>
+                    <div class="checkboxContainer">
+                        <label>
+                            <input type="checkbox" is="emby-checkbox" id="PreferRussianMetadata" />
+                            <span>Prefer Russian metadata</span>
+                        </label>
+                        <div class="fieldDescription">
+                            Prefer Russian titles and descriptions over English ones
+                        </div>
+                    </div>
+                    <div class="checkboxContainer">
+                        <label>
+                            <input type="checkbox" is="emby-checkbox" id="EnableDebugLogging" />
+                            <span>Enable debug logging</span>
+                        </label>
+                        <div class="fieldDescription">
+                            Enable detailed logging for troubleshooting
+                        </div>
+                    </div>
+                    <div>
+                        <button is="emby-button" type="submit" class="raised button-submit block">
+                            <span>Save</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script type="text/javascript">
+            (function () {
+                var pluginId = "3b9c8c8e-4b5e-4f8e-9a1b-2c3d4e5f6a7b";
+
+                document.querySelector('.kinopoiskConfigForm').addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    Dashboard.showLoadingMsg();
+
+                    var config = {
+                        ApiKey: document.querySelector('#ApiKey').value,
+                        ApiUrl: document.querySelector('#ApiUrl').value,
+                        RequestTimeoutSeconds: parseInt(document.querySelector('#RequestTimeoutSeconds').value),
+                        MaxSearchResults: parseInt(document.querySelector('#MaxSearchResults').value),
+                        PreferRussianMetadata: document.querySelector('#PreferRussianMetadata').checked,
+                        EnableDebugLogging: document.querySelector('#EnableDebugLogging').checked
+                    };
+
+                    ApiClient.getPluginConfiguration(pluginId).then(function (existingConfig) {
+                        Object.assign(existingConfig, config);
+                        ApiClient.updatePluginConfiguration(pluginId, existingConfig).then(function (result) {
+                            Dashboard.processPluginConfigurationUpdateResult(result);
+                        });
+                    });
+                });
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    Dashboard.showLoadingMsg();
+                    ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+                        document.querySelector('#ApiKey').value = config.ApiKey || 'XN7WBQA-MF24EYN-Q4SWZHF-7AR2715';
+                        document.querySelector('#ApiUrl').value = config.ApiUrl || 'https://api.kinopoisk.dev/v1.4';
+                        document.querySelector('#RequestTimeoutSeconds').value = config.RequestTimeoutSeconds || 30;
+                        document.querySelector('#MaxSearchResults').value = config.MaxSearchResults || 10;
+                        document.querySelector('#PreferRussianMetadata').checked = config.PreferRussianMetadata !== false;
+                        document.querySelector('#EnableDebugLogging').checked = config.EnableDebugLogging === true;
+                        Dashboard.hideLoadingMsg();
+                    });
+                });
+            })();
+        </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,17 @@
+---
+name: "Kinopoisk Metadata Provider"
+guid: "3b9c8c8e-4b5e-4f8e-9a1b-2c3d4e5f6a7b"
+version: "1.0.0.0"
+targetAbi: "10.9.0.0"
+framework: "net8.0"
+overview: "Fetches metadata from Kinopoisk API for movies and TV shows"
+description: >
+  A metadata provider plugin for Jellyfin that fetches movie and TV show information 
+  from the Kinopoisk API, providing rich Russian language metadata including ratings, 
+  cast, crew, and plot information.
+category: "Metadata"
+owner: "jellyfin"
+artifacts:
+- "Jellyfin.Plugin.KinopoiskDev.dll"
+changelog: >
+  Initial release with basic Kinopoisk API integration
