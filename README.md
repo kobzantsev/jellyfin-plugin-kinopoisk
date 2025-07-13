@@ -28,7 +28,7 @@ A comprehensive Jellyfin plugin that fetches metadata from the Kinopoisk API for
 ### Build from Source
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/kobzantsev/jellyfin-plugin-kinopoisk.git
 cd Jellyfin.Plugin.KinopoiskDev.Proper
 dotnet build --configuration Release
 ```
